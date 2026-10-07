@@ -18,34 +18,45 @@
 
 ---
 
-## 💻 快速開始：在各平台一鍵同步
+## 🌐 免登入、免帳號！完全公開讀取（No Auth Required）
+
+因為本 Repo 為 **Public 公開儲存庫**：
+- **完全不需要登入 GitHub**（不需要 `gh auth login`，不需要 SSH Key，不需要 Personal Access Token）。
+- 在學校公用電腦、全新租賃電腦、虛擬機或沒有您 GitHub 帳號的電腦上，都能直接以匿名 HTTPS 讀取並完成安裝同步！
+
+---
+
+## 💻 快速開始：在各平台一鍵同步（完全免登入）
 
 在目標電腦打開終端機（macOS 使用 Terminal，Windows 使用 PowerShell 或 Windows Terminal）：
 
 ### 🍎 在 macOS 上的安裝與同步步驟
 
 ```bash
-# 1. 安裝 chezmoi（若尚未安裝）
-brew install chezmoi
-# 或使用免 root 腳本：
+# 1. 安裝 chezmoi（若尚未安裝，推薦官方免 root 一鍵腳本）
 sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin
 
-# 2. 一鍵初始化並套用所有技能
-chezmoi init --apply asc103138/antigravity-skills
+# （若有 Homebrew 亦可直接執行）：
+# brew install chezmoi
+
+# 2. 一鍵初始化並套用（直接走公開 HTTPS，免登入）
+chezmoi init --apply https://github.com/asc103138/antigravity-skills.git
 ```
 
 ---
 
 ### 🪟 在 Windows 上的安裝與同步步驟
 
+以一般使用者開啟 **PowerShell** 或 **Windows Terminal** 執行：
+
 ```powershell
 # 1. 安裝 chezmoi（以 winget 或 scoop）
 winget install twpayne.chezmoi
 # 或使用 scoop：
-scoop install chezmoi
+# scoop install chezmoi
 
-# 2. 一鍵初始化並套用所有技能
-chezmoi init --apply asc103138/antigravity-skills
+# 2. 一鍵初始化並套用（完全免帳號密碼登入）
+chezmoi init --apply https://github.com/asc103138/antigravity-skills.git
 ```
 
 > [!NOTE]
