@@ -1,0 +1,7 @@
+interface:
+  display_name: "Teacher Slide Image Studio"
+  short_description: "引導教師從想法到逐頁獨立簡報圖片的完整工作流程與檢查"
+  default_prompt: "Use $teacher-slide-image-workshop to turn my teaching idea and uploaded references into a complete folder of numbered slide images."
+
+policy:
+  allow_implicit_invocation: true

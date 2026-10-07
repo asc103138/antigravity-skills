@@ -1,0 +1,36 @@
+{
+  "mcpServers": {
+    "gemini-notebook-mcp": {
+      "command": "notebooklm-mcp",
+      "args": []
+    },
+    "canva": {
+      "serverUrl": "https://mcp.canva.com/mcp"
+    },
+    "firebase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "firebase-tools@latest",
+        "mcp"
+      ]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp"
+      ]
+    },
+    "netlify": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@netlify/mcp"
+      ],
+      "env": {
+        "NETLIFY_PERSONAL_ACCESS_TOKEN": "YOUR_NETLIFY_PERSONAL_ACCESS_TOKEN_HERE"
+      }
+    }
+  }
+}

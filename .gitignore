@@ -1,0 +1,40 @@
+# .gitignore for antigravity-skills repo
+
+# 系統隱私與憑證
+.env
+.env.*
+*.key
+*.token
+*.pem
+credentials.json
+token.json
+jetski-standalone-oauth-token
+
+# 編輯器與作業系統
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Python / Node 快取與依賴
+__pycache__/
+*.pyc
+node_modules/
+package-lock.json
+.venv/
+env/
+
+# Antigravity 執行期動態資料 (不納入跨電腦同步，避免衝突與覆蓋)
+brain/
+conversations/
+conversation_summaries.db*
+crashes/
+annotations/
+installation_id
+agyhub_summaries_proto.pb
+antigravity_state.pbtxt
+plugin_data/
+
+# 版權課習與學生個資
+*.pdf.bak
+raw_student_data/

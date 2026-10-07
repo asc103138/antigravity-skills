@@ -1,0 +1,18 @@
+slide_number: "01"
+title: ""
+message: ""
+exact_text: []
+scene: ""
+characters: []
+composition: ""
+camera: ""
+lighting: ""
+background: ""
+decorations: []
+consistency_reference: "visual-bible"
+negative_constraints:
+  - "no gibberish text"
+  - "no watermark"
+  - "no accidental extra text"
+  - "no cropped title"
+  - "no style drift"

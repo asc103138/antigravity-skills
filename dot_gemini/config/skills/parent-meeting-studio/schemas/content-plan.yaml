@@ -1,0 +1,32 @@
+meeting:
+  school: ""
+  grade: ""
+  class: ""
+  teacher: ""
+  duration_minutes: 30
+  audience: "家長"
+
+tone:
+  keywords: []
+  visual_style: ""
+  emotional_goal: ""
+
+core_messages:
+  - ""
+  - ""
+  - ""
+
+parent_concerns: []
+parent_cooperation: []
+
+slides:
+  - id: "01"
+    slug: "cover"
+    title: ""
+    purpose: ""
+    core_message: ""
+    visible_text: []
+    visual_scene: ""
+    speaker_note: ""
+    suggested_minutes: 1
+    website_section: "hero"
