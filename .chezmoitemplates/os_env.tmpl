@@ -1,0 +1,9 @@
+{{/* 跨平台路徑與環境變數判斷輔助樣板 */}}
+{{- $isWindows := eq .chezmoi.os "windows" -}}
+{{- $isDarwin := eq .chezmoi.os "darwin" -}}
+{{- $isLinux := eq .chezmoi.os "linux" -}}
+
+# 作業系統環境：{{ .chezmoi.os }} ({{ .chezmoi.arch }})
+# 使用者家目錄：{{ .chezmoi.homeDir }}
+# Python 執行指令：{{ if $isWindows }}python{{ else }}python3{{ end }}
+# Node npx 指令：{{ if $isWindows }}npx.cmd{{ else }}npx{{ end }}

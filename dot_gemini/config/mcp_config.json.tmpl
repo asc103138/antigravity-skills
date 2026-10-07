@@ -8,7 +8,7 @@
       "serverUrl": "https://mcp.canva.com/mcp"
     },
     "firebase": {
-      "command": "npx",
+      "command": {{ if eq .chezmoi.os "windows" }}"npx.cmd"{{ else }}"npx"{{ end }},
       "args": [
         "-y",
         "firebase-tools@latest",
@@ -16,21 +16,18 @@
       ]
     },
     "playwright": {
-      "command": "npx",
+      "command": {{ if eq .chezmoi.os "windows" }}"npx.cmd"{{ else }}"npx"{{ end }},
       "args": [
         "-y",
         "@playwright/mcp"
       ]
     },
     "netlify": {
-      "command": "npx",
+      "command": {{ if eq .chezmoi.os "windows" }}"npx.cmd"{{ else }}"npx"{{ end }},
       "args": [
         "-y",
         "@netlify/mcp"
-      ],
-      "env": {
-        "NETLIFY_PERSONAL_ACCESS_TOKEN": "YOUR_NETLIFY_PERSONAL_ACCESS_TOKEN_HERE"
-      }
+      ]
     }
   }
 }

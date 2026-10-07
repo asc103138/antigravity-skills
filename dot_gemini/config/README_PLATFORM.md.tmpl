@@ -1,0 +1,42 @@
+# {{ .chezmoi.os | upper }} 環境適性化說明與配置檢核 (Antigravity Environment Spec)
+
+> 本文件由 chezmoi 於套用時依據作業系統自動生成。
+
+## 🖥️ 目前主機環境偵測
+- **作業系統 (OS)**：`{{ .chezmoi.os }}` ({{ if eq .chezmoi.os "windows" }}Microsoft Windows{{ else if eq .chezmoi.os "darwin" }}macOS{{ else }}Linux{{ end }})
+- **架構 (Architecture)**：`{{ .chezmoi.arch }}`
+- **使用者家目錄**：`{{ .chezmoi.homeDir }}`
+
+---
+
+## ⚙️ 平台適性化執行指南
+
+{{ if eq .chezmoi.os "windows" -}}
+### 🪟 Windows 環境特別注意事項：
+1. **指令路徑與副檔名**：
+   - 全域工具如 `npx`、`npm`、`yarn` 在 Windows 上會自動對齊調用 `.cmd`（例：`npx.cmd`）。
+   - Python 請直接使用 `python`（確認已勾選 Add Python to PATH）。
+2. **終端機編碼**：
+   - 請確保 PowerShell 終端機預設使用 UTF-8 編碼（執行 `chcp 65001`）。
+3. **字型與文件相容性**：
+   - Windows 系統預設中文字型為「標楷體」與「微軟正黑體」。產出 Word、考卷或簡報時已自動適配 Windows 本地字型庫，避免雙欄排版與直式注音錯位。
+4. **檔案路徑斜線**：
+   - 在命令列或 Python 中請注意正反斜線相容，路徑建議一律使用 `pathlib.Path` 或以 `/` 分隔。
+{{- else -}}
+### 🍎 macOS 環境特別注意事項：
+1. **指令路徑**：
+   - `npx` 與各類 CLI 工具由 Homebrew（`/opt/homebrew/bin`）或系統 PATH 管理。
+   - Python 預設使用 `python3` 或 `uv`。
+2. **字型與排版相容性**：
+   - macOS 系統預設中文字型為「BiauKai (標楷體)」、「PingFang TC (蘋方)」或「Heiti TC (黑體)」。
+   - 生成考卷與學校教材時，若需交由教務處 Windows 電腦列印，請搭配 `antigravity-exam-win-converter` 確保 Windows 相容。
+3. **Unicode NFC 正規化**：
+   - macOS 檔案系統常見 NFD 格式，工具包已內建 NFC 正規化防護，避免中文字元比對失效。
+{{- end }}
+
+---
+
+## 📂 技能與規則安裝路徑
+- **全域技能目錄**：`{{ .chezmoi.homeDir }}/.gemini/config/skills`
+- **全域審查規範**：`{{ .chezmoi.homeDir }}/.gemini/config/rules/curriculum-review-protocol.md`
+- **MCP 設定檔**：`{{ .chezmoi.homeDir }}/.gemini/config/mcp_config.json`
