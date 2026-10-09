@@ -1,20 +1,21 @@
 ---
 name: antigravity-advanced-doc-toolkit
-description: 教師行政進階文件與資料處理工具包（Word排版、PDF合併分割、PDF表格結構精準抽取、Excel/Pandas段考大表統計、圖片批次處理與浮水印）。包含 macOS 原生適性（中文字型、NFC檔名正規化、EXIF校正、uv隨選安裝）。當使用者提到「進階文件處理」、「PDF表格擷取」、「段考成績分析」、「PDF合併分割」、「Word講義排版」、「圖片批次浮水印」時載入此技能。
+description: 教師行政進階文件與資料處理工具包（PdfCraft 原生 PDF 引擎、Word排版、PDF合併分割、PDF表格結構精準抽取、Excel/Pandas段考大表統計、圖片批次處理與浮水印）。包含 macOS 原生適性（中文字型、NFC檔名正規化、EXIF校正、uv隨選安裝）。當使用者提到「進階文件處理」、「PDF表格擷取」、「段考成績分析」、「PDF合併分割」、「Word講義排版」、「圖片批次浮水印」、「PDF轉圖」、「PDF壓縮最佳化」時載入此技能。
 ---
 
-# 教師行政進階文件與資料處理工具包（macOS 適性強化版）
+# 教師行政進階文件與資料處理工具包（macOS 適性強化版 + PdfCraft 原生引擎整合）
 
-本技能為專門針對 AI Agent 與教師行政打造的進階自動化擴充包，奠基於核心文件工具之上，深入解決複雜排版、PDF 結構化抽取、成績大表統計與圖片批次處理等高階需求。
+本技能為專門針對 AI Agent 與教師行政打造的進階自動化擴充包，奠基於核心文件工具之上，深入解決複雜排版、PDF 結構化抽取、成績大表統計與圖片批次處理等高階需求。現已**深度整合純 Rust 原生 `PdfCraft` (Acrobat Pro 等級引擎)**，形成「**Rust 原生高速 PDF 核心 ＋ Python 彈性資料運算**」的雙軌旗艦架構。
 
 ---
 
 ## 一、 核心架構與執行原則
 
-1. **智慧隨選載入機制 (On-Demand Loading)**：
-   - 預先不強制安裝所有套件，Agent 依據使用者當前任務類型（如處理 PDF 表格、段考大表或圖片批次）自主判斷，即時透過 `uv` 安裝對應套件，維持專案環境輕量純淨。
+1. **雙軌引擎架構 (Dual-Engine Strategy)**：
+   - **PDF 結構與文件操作軌 (PdfCraft)**：凡涉及 PDF 檢視、頁面重排、旋轉、多檔合併、切頁分割、高畫質轉圖、壓印浮水印、PDF 壓縮最佳化、表單填寫、安全性防護等，**優先調用本機原生的 `pdfcraft-cli` 或 `pdfcraft` MCP 伺服器**。百毫秒級原生運算，完全保留書籤、表單、簽名與圖層，且無需啟動 Python 虛擬環境。
+   - **資料統計與文件排版軌 (Python + uv)**：涉及複雜大表統計（Pandas 段考五標）、Excel 細部樣式格式化（openpyxl）、Word 講義產生修改（python-docx）、特殊表格坐標抽取（pdfplumber）、程式化生成公文通知單（reportlab）、圖片 EXIF 轉正（Pillow）時，透過 `uv` 即時載入執行。
 2. **100% 本機端運算與隱私防線**：
-   - 學校正式公文、考卷、段考學生成績與教師行政資料，**100% 透過本機 Python 腳本直接在電腦硬碟運算**，絕對禁止上傳至第三方外部分析 API 或非授權雲端。
+   - 學校正式公文、考卷、段考學生成績與教師行政資料，**100% 透過本機直接在電腦硬碟運算**，絕對禁止上傳至第三方外部分析 API 或非授權雲端。
    - 學生資料處理原則：僅記錄或顯示班級代號與座號，真實姓名一律建議遮蔽或去識別化。
 
 ---
@@ -25,36 +26,63 @@ description: 教師行政進階文件與資料處理工具包（Word排版、PDF
 
 | macOS 適性痛點 | 原因與影響 | 本技能解決方案 |
 |---|---|---|
-| **Python PEP 668 限制** | 系統防護禁止全域 `pip install` | 一律使用 `uv venv .venv --python 3.12` 隔離，隨選安裝使用 `uv pip install --python .venv/bin/python <pkg>`。 |
-| **中文字型缺失 (ReportLab/Matplotlib)** | Linux 字型或 Windows 字型在 macOS 不存在，造成 PDF 亂碼、黑框或 Matplotlib 方塊字 | 自動指向 macOS 系統字型：`/System/Library/Fonts/PingFang.ttc` 或 `/System/Library/Fonts/Supplemental/Songti.ttc`，動態註冊中文字型。 |
-| **Unicode NFD 檔名分解** | macOS APFS 預設檔名編碼為 NFD，中文檔名在跨平台傳輸時常變成注音或亂碼 | 讀寫檔時以 `unicodedata.normalize('NFC', path)` 統一轉為 NFC 標準字元。 |
+| **PDF 處理依賴多、速度慢** | 傳統 Python 庫依賴 Poppler、C 函式庫，安裝繁瑣且常掉格式 | 原生整合 **`PdfCraft` (Universal 二進位檔)**，系統預裝於 `~/.local/bin`，無需任何額外 C 依賴。 |
+| **Python PEP 668 限制** | 系統防護禁止全域 `pip install` | Python 軌一律使用 `uv venv .venv --python 3.12` 隔離，隨選安裝使用 `uv pip install --python .venv/bin/python <pkg>`。 |
+| **中文字型缺失 (ReportLab/Matplotlib)** | Linux 字型或 Windows 字型在 macOS 不存在，造成 PDF 亂碼或方塊字 | 自動指向 macOS 系統字型：`/System/Library/Fonts/PingFang.ttc` 或 `/System/Library/Fonts/Supplemental/Songti.ttc`，動態註冊中文字型；PdfCraft 則原生內建 CJK 字型引擎。 |
+| **Unicode NFD 檔名分解** | macOS APFS 預設檔名編碼為 NFD，中文檔名在跨平台傳輸時常變成注音或亂碼 | 讀寫檔時以 `unicodedata.normalize('NFC', path)` 統一轉為 NFC 標準字元，PdfCraft 亦原生支援 UTF-8 NFC/NFD 自動相容。 |
 | **系統垃圾檔案干擾** | 資料夾批次處理常受 `.DS_Store`、`__MACOSX`、`._` 檔案阻礙 | 批次遍歷目錄時主動過濾忽略上述隱藏與暫存檔案。 |
 | **照片 EXIF 顛倒** | iPhone/iPad 拍攝之考卷或活動照片常有 EXIF 旋轉方向標記 | Pillow 處理圖片前自動調用 `ImageOps.exif_transpose` 轉正方向。 |
 
 ---
 
-## 三、 七大工具分工與隨選安裝矩陣
+## 三、 工具分工矩陣
 
-| 工具套件 | 主要定位與任務場景 | 隨選安裝指令 (macOS + uv) |
-|---|---|---|
-| **`pdfplumber`** | 精準抽取 PDF 成績單、課表、報表中的表格結構與文字座標 | `uv pip install --python .venv/bin/python pdfplumber` |
-| **`pypdf`** | PDF 批次合併、依頁碼分割、頁面旋轉、元資料移除 | `uv pip install --python .venv/bin/python pypdf` |
-| **`reportlab`** | 程式化動態生成 PDF 格式化公文、研習證書、通知單 | `uv pip install --python .venv/bin/python reportlab` |
-| **`pandas`** | 高速清理、合併、樞紐分析與多維度統計大量段考成績大表 | `uv pip install --python .venv/bin/python pandas openpyxl` |
-| **`openpyxl`** | 讀寫 Excel 活頁簿、設定單元格顏色、公式與自適應欄寬 | `uv pip install --python .venv/bin/python openpyxl` |
-| **`python-docx`** | 建立與修改 Word 文件、套用標準標題階層、表格排版 | `uv pip install --python .venv/bin/python python-docx` |
-| **`pillow`** | 批次圖片尺寸調整、格式轉換、教材圖片浮水印壓印 | `uv pip install --python .venv/bin/python pillow` |
+| 工具 | 類型 | 主要定位與任務場景 | 安裝與調用方式 |
+|---|---|---|---|
+| **`PdfCraft`** | **Rust 原生 (推薦首選)** | **PDF 頁面合併、分割、旋轉、高畫質轉圖、浮水印、壓縮最佳化、表單填寫、安全性移除** | 已安裝於全域 `pdfcraft-cli`，或直接使用 `pdfcraft` MCP 工具 |
+| **`pdfplumber`** | Python 套件 | 精準抽取 PDF 成績單、課表、報表中的「複雜表格邊框結構」與文字坐標 | `uv pip install --python .venv/bin/python pdfplumber` |
+| **`reportlab`** | Python 套件 | 程式化動態生成 PDF 格式化公文、研習證書、通知單 | `uv pip install --python .venv/bin/python reportlab` |
+| **`pandas`** | Python 套件 | 高速清理、合併、樞紐分析與多維度統計大量段考成績大表 | `uv pip install --python .venv/bin/python pandas openpyxl` |
+| **`openpyxl`** | Python 套件 | 讀寫 Excel 活頁簿、設定單元格顏色、公式與自適應欄寬 | `uv pip install --python .venv/bin/python openpyxl` |
+| **`python-docx`** | Python 套件 | 建立與修改 Word 文件、套用標準標題階層、表格排版 | `uv pip install --python .venv/bin/python python-docx` |
+| **`pillow`** | Python 套件 | 批次圖片尺寸調整、格式轉換、EXIF 修正、教材照片浮水印 | `uv pip install --python .venv/bin/python pillow` |
 
 ---
 
 ## 四、 高頻應用標準範例腳本（可直接調用）
 
-### 1. 【PDF 表格抽取】使用 `pdfplumber` 將 PDF 表格轉為結構化資料
+### 1. 【PDF 高速合併、分割與旋轉】使用 `PdfCraft` (首選)
+適用：多份學習單合併、旋轉方向轉正、分離章節或封面。
+```bash
+# A. 合併多份 PDF（完整保留書籤與表單，零損耗）
+pdfcraft-cli combine "國語第一單元.pdf" "國語第二單元.pdf" "國語第三單元.pdf" --out "國語講義全冊.pdf"
+
+# B. 頁面旋轉與挑頁刪除（旋轉第 1 頁 90 度、刪除第 3 頁、將第 5 頁移到開頭）
+pdfcraft-cli edit "考卷掃描.pdf" --out "考卷轉正.pdf" --rotate 1:90 --delete 3 --move 5:1
+
+# C. 擷取特定頁面
+pdfcraft-cli extract "整本教材.pdf" --pages 1-5,10,12 --out "精選內容.pdf"
+
+# D. 批次自動分割（每 2 頁分割為一個獨立檔案）
+pdfcraft-cli split "題庫彙編.pdf" --every 2 --out-dir "./各單元考卷/"
+```
+
+---
+
+### 2. 【PDF 高畫質頁面轉圖】使用 `PdfCraft`
+適用：講義預覽圖、投影片截圖、家長通知單圖片化分享（免裝 Poppler / pdf2image）。
+```bash
+# 渲染第 1 頁為高品質 PNG（可調整 DPI，預設 96，出版/列印建議 150~300）
+pdfcraft-cli render "學校公文.pdf" --page 1 --dpi 150 --out "公文預覽.png"
+```
+
+---
+
+### 3. 【PDF 表格抽取】使用 `pdfplumber` 轉為 Excel
 適用：段考成績 PDF、研習簽到表、課表 PDF 轉 Excel/CSV。
 ```python
 import pdfplumber
 import pandas as pd
-from pathlib import Path
 import unicodedata
 
 def extract_tables_from_pdf(pdf_path: str, output_excel: str):
@@ -62,11 +90,10 @@ def extract_tables_from_pdf(pdf_path: str, output_excel: str):
     all_rows = []
     
     with pdfplumber.open(pdf_path) as pdf:
-        for page_idx, page in enumerate(pdf.pages, 1):
+        for page in pdf.pages:
             tables = page.extract_tables()
             for table in tables:
                 for row in table:
-                    # 去除換行並過濾空白
                     clean_row = [cell.strip().replace('\n', ' ') if cell else '' for cell in row]
                     if any(clean_row):
                         all_rows.append(clean_row)
@@ -81,32 +108,7 @@ def extract_tables_from_pdf(pdf_path: str, output_excel: str):
 
 ---
 
-### 2. 【PDF 合併與旋轉】使用 `pypdf` 批次整理文件
-適用：多份學習單合併、掃描方向轉正、分離封面。
-```python
-from pypdf import PdfReader, PdfWriter
-from pathlib import Path
-
-def merge_and_fix_pdfs(input_files: list[str], output_pdf: str, rotate_degrees: int = 0):
-    writer = PdfWriter()
-    for file in input_files:
-        p = Path(file)
-        if p.name.startswith('.') or p.name == '.DS_Store':
-            continue
-        reader = PdfReader(str(p))
-        for page in reader.pages:
-            if rotate_degrees in (90, 180, 270):
-                page.rotate(rotate_degrees)
-            writer.add_page(page)
-            
-    with open(output_pdf, 'wb') as f:
-        writer.write(f)
-    print(f"✅ 已成功將 {len(input_files)} 個 PDF 合併儲存至 {output_pdf}")
-```
-
----
-
-### 3. 【段考大表統計】使用 `pandas` 進行學生成績統計與五標分析
+### 4. 【段考大表統計】使用 `pandas` 分析成績與五標
 適用：期中期末考總分、平均、排名、高低標、及格率分析。
 ```python
 import pandas as pd
@@ -114,16 +116,12 @@ import numpy as np
 
 def analyze_exam_scores(excel_path: str, output_path: str):
     df = pd.read_excel(excel_path)
-    
-    # 假設欄位包含：班級, 座號, 國文, 英文, 數學, 自然, 社會
     score_cols = [c for c in ['國文', '英文', '數學', '自然', '社會'] if c in df.columns]
     
-    # 計算總分與平均
     df['總分'] = df[score_cols].sum(axis=1)
     df['平均'] = df[score_cols].mean(axis=1).round(2)
     df['班排名'] = df.groupby('班級')['總分'].rank(ascending=False, method='min').astype(int)
     
-    # 統計摘要（五標與平均）
     summary = df[score_cols + ['總分', '平均']].agg([
         ('平均值', lambda x: x.mean().round(2)),
         ('標準差', lambda x: x.std().round(2)),
@@ -144,7 +142,7 @@ def analyze_exam_scores(excel_path: str, output_path: str):
 
 ---
 
-### 4. 【macOS 中文字型 PDF 產出】使用 `reportlab` 生成通知單或研習證書
+### 5. 【macOS 中文字型 PDF 產出】使用 `reportlab`
 適用：程式化生成無亂碼的通知單、榮譽榜、研習證書。
 ```python
 from reportlab.lib.pagesizes import A4
@@ -155,14 +153,12 @@ from reportlab.pdfbase.ttfonts import TTFont
 import os
 
 def generate_notice_pdf(output_pdf: str, student_title: str, content: str):
-    # macOS 繁體中文字型載入（優先使用蘋方或微軟正黑/宋體）
     font_candidates = [
         "/System/Library/Fonts/PingFang.ttc",
         "/System/Library/Fonts/STHeiti Light.ttc",
-        "/System/Library/Fonts/Supplemental/Songti.ttc",
-        "/Library/Fonts/Arial Unicode.ttf"
+        "/System/Library/Fonts/Supplemental/Songti.ttc"
     ]
-    font_name = "Helvetica" # fallback
+    font_name = "Helvetica"
     for fpath in font_candidates:
         if os.path.exists(fpath):
             try:
@@ -183,12 +179,12 @@ def generate_notice_pdf(output_pdf: str, student_title: str, content: str):
         Paragraph(content.replace('\n', '<br/>'), body_style)
     ]
     doc.build(story)
-    print(f"✅ 已成功產生 PDF：{output_pdf}（使用字型：{font_name}）")
+    print(f"✅ 已成功產生 PDF：{output_pdf}")
 ```
 
 ---
 
-### 5. 【圖片批次處理與浮水印】使用 `Pillow` 處理活動與教材照片
+### 6. 【圖片批次處理與 EXIF 修正】使用 `Pillow`
 適用：成果展照片壓印學校名稱、EXIF 自動轉正、批次壓縮成教材解析度。
 ```python
 from PIL import Image, ImageDraw, ImageFont, ImageOps
@@ -200,59 +196,43 @@ def batch_process_images(input_dir: str, output_dir: str, watermark_text: str = 
     out_path = Path(output_dir)
     out_path.mkdir(parents=True, exist_ok=True)
     
-    # 支援格式
     valid_exts = {'.jpg', '.jpeg', '.png', '.webp'}
-    
     for file in in_path.iterdir():
-        # 過濾 macOS 隱藏檔案
         if file.name.startswith('.') or file.suffix.lower() not in valid_exts:
             continue
             
         with Image.open(file) as img:
-            # 1. 自動修正 iPhone / iPad 拍照之 EXIF 方向
             img = ImageOps.exif_transpose(img)
-            
-            # 2. 等比例縮放
             if img.width > max_width:
                 scale = max_width / float(img.width)
-                new_size = (max_width, int(float(img.height) * scale))
-                img = img.resize(new_size, Image.Resampling.LANCZOS)
+                img = img.resize((max_width, int(float(img.height) * scale)), Image.Resampling.LANCZOS)
                 
-            # 3. 壓製文字浮水印
             if watermark_text:
                 draw = ImageDraw.Draw(img)
-                # 載入 macOS 系統字型
-                font_path = "/System/Library/Fonts/Supplemental/Arial Unicode.ttf"
-                if not Path(font_path).exists():
-                    font_path = "/System/Library/Fonts/PingFang.ttc"
+                font_path = "/System/Library/Fonts/PingFang.ttc"
                 try:
                     font = ImageFont.truetype(font_path, size=max(20, int(img.width * 0.025)))
                 except Exception:
                     font = ImageFont.load_default()
-                    
                 bbox = draw.textbbox((0, 0), watermark_text, font=font)
                 w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
-                x = img.width - w - 25
-                y = img.height - h - 25
-                # 陰影與文字
-                draw.text((x + 1, y + 1), watermark_text, fill=(0, 0, 0, 128), font=font)
-                draw.text((x, y), watermark_text, fill=(255, 255, 255, 220), font=font)
+                draw.text((img.width - w - 24, img.height - h - 24), watermark_text, fill=(0, 0, 0, 128), font=font)
+                draw.text((img.width - w - 25, img.height - h - 25), watermark_text, fill=(255, 255, 255, 220), font=font)
                 
-            # 儲存 (檔名正規化)
             clean_name = unicodedata.normalize('NFC', file.stem) + ".jpg"
             img.convert('RGB').save(out_path / clean_name, 'JPEG', quality=85)
-            
-    print(f"✅ 圖片批次處理完成，輸出至 {output_dir}")
 ```
 
 ---
 
-## 五、 使用情境觸發對照表
+## 五、 使用情境決策與工具調用表
 
-| 當使用者提到... | 應調用之核心工具 | 行動要點 |
+| 當使用者提到... | 應調用之核心工具 | 調用方式與行動要點 |
 |---|---|---|
-| 「幫我把這幾張成績單 PDF 的表格抓出來轉成 Excel」 | `pdfplumber` + `openpyxl` | 抽取邊框表格，按欄位重組為 DataFrame 匯出 |
-| 「把這 3 個 PDF 合併成一份，中間有兩頁橫向的幫我轉正」 | `pypdf` | 逐頁讀取、判斷旋轉角度、合併為單一 PDF |
-| 「分析這份全學年段考成績，計算五標、排名與各學科平均」 | `pandas` | 讀入 Excel 大表，進行聚合統計並生成摘要分頁 |
-| 「把這份教學活動相片縮小到 1600px，並在右下角印上校名」 | `Pillow` | EXIF 轉正、高品質雙三次縮放、壓製半透明浮水印 |
-| 「自動產生一份研習簽到表與研習證明 PDF，中文不要跑版」 | `reportlab` | 註冊 macOS 蘋方/黑體字型，組裝標題與段落流式版面 |
+| **「把這 3 個 PDF 合併成一份，有橫向頁面幫我轉正」** | **`PdfCraft` (首選)** | 執行 `pdfcraft-cli combine ...` 與 `edit --rotate`，零損耗且秒級完成 |
+| **「把這份講義第 1 頁轉成高畫質 PNG 圖片」** | **`PdfCraft` (首選)** | 執行 `pdfcraft-cli render "講義.pdf" --page 1 --dpi 150 --out "預覽.png"` |
+| **「幫我壓縮最佳化這份過大的 PDF 檔案」** | **`PdfCraft` (MCP / CLI)** | 調用 `doc_optimize` 或 CLI 命令降低圖像解析度並移除冗餘資料 |
+| **「幫我把成績單 PDF 的表格抓出來轉成 Excel」** | **`pdfplumber` + `openpyxl`** | 抽取精準網格坐標，按欄位重組為 DataFrame 匯出 |
+| **「分析這份全學年段考成績，計算五標、排名與平均」** | **`pandas`** | 讀入 Excel 大表，進行聚合統計並生成學科統計分頁 |
+| **「把活動相片縮小到 1600px，並在右下角印上校名」** | **`Pillow`** | EXIF 轉正、雙三次高品質縮放、壓印中文半透明浮水印 |
+| **「自動產生研習簽到表與研習證明 PDF，中文字不要跑版」** | **`reportlab`** | 註冊 macOS 蘋方/黑體字型，組裝標題與段落流式版面 |

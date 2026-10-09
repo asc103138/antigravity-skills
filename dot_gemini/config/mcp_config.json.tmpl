@@ -28,6 +28,14 @@
         "-y",
         "@netlify/mcp"
       ]
+    },
+    "docling": {
+      "command": "docling-mcp-server",
+      "args": ["--transport", "stdio", "conversion"]
+    },
+    "pdfcraft": {
+      "command": {{ if eq .chezmoi.os "windows" }}"pdfcraft-cli.exe"{{ else }}"pdfcraft-cli"{{ end }},
+      "args": ["mcp"]
     }
   }
 }

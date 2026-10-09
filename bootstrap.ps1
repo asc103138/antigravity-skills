@@ -39,6 +39,7 @@ Write-Host ""
 Write-Host "============================================================" -ForegroundColor Green
 Write-Host "🎉 全域技能與環境配置完成！" -ForegroundColor Green
 Write-Host "📂 技能目錄：$HOME\.gemini\config\skills" -ForegroundColor Green
-Write-Host "📜 全域規則：$HOME\.gemini\config\rules\curriculum-review-protocol.md" -ForegroundColor Green
-Write-Host "⚙️ 平台設定：$HOME\.gemini\config\mcp_config.json (已切換為 npx.cmd)" -ForegroundColor Green
+Write-Host "📜 全域規則：$HOME\.gemini\config\rules\" -ForegroundColor Green
+Write-Host "⚙️ 平台設定：$HOME\.gemini\config\mcp_config.json" -ForegroundColor Green
+Write-Host "🛠️ 核心工具：PdfCraft / Docling / Playwright MCP 就緒" -ForegroundColor Green
 Write-Host "============================================================" -ForegroundColor Green

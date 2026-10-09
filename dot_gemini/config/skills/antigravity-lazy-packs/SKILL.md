@@ -31,8 +31,9 @@ description: Antigravity 全域技能總覽與懶人包索引。當使用者說�
 | 16 | `teacher-course-assignment-skill` | 國中小教師配課、排課、鐘點試算與雙重會計檢查 | 「配課」、「排課」、「減課」、「教師任課」 |
 | 17 | `teacher-slide-image-workshop` | 教學簡報與工作坊 16:9 逐頁 AI 圖像簡報製作 | 「教學投影片生成」、「簡報繪圖」、「逐頁簡報」 |
 | 18 | `parent-meeting-studio` | 班親會、家長日企劃、簡報、講者備註與響應式網站設計 | 「班親會」、「家長日」、「親師座談會」 |
-| 19 | `antigravity-advanced-doc-toolkit` | 教學行政進階文件與資料處理（macOS適性、PDF表格抽取、合併分割、Pandas大表統計、圖片批次浮水印） | 「進階文件處理」、「PDF表格擷取」、「段考成績分析」、「圖片批次浮水印」 |
+| 19 | `antigravity-advanced-doc-toolkit` | 教學行政進階文件與資料處理（整合 PdfCraft 原生 PDF 引擎、macOS適性、PDF表格抽取、合併分割、Pandas大表統計、圖片批次浮水印） | 「進階文件處理」、「PDF表格擷取」、「段考成績分析」、「圖片批次浮水印」、「PDF轉圖」、「PDF壓縮最佳化」 |
 | 20 | `g4-curriculum-review` | 全域教材與試題三階審查中樞（強制約束：所有考卷、學習單、教學簡報、各類教材生成前必審，南一數/翰林國/康軒社/海線情境） | 「生成教材」、「出考卷」、「做學習單」、「教學簡報」、「審教材」、「四年級審查」、「三階漏斗審查」 |
+| 21 | `antigravity-pdfcraft` | 純 Rust 高效能 PDF 工作台（Acrobat Pro 等級）：檢視、合併、分割、頁面重排、文字抽取、渲染轉圖、表單、註解、浮水印與最佳化 | 「PdfCraft」、「PDF處理」、「PDF合併」、「PDF分割」、「PDF轉圖片」、「PDF旋轉」、「PDF表單」、「PDF浮水印」 |
 
 ---
 
