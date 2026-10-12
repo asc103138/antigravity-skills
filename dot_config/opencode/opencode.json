@@ -1,0 +1,75 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "C:/Users/ccps/.config/opencode/AGENTS.md"
+  ],
+  "permission": {
+    "skill": {
+      "startup": "allow",
+      "shutdown": "allow",
+      "project-init": "allow",
+      "audio-notes": "allow",
+      "canva": "allow",
+      "opencode-file-toolkit": "allow",
+      "soil-image-deck": "allow",
+      "soil-teaching-deck": "allow",
+      "soil-html-deck": "allow",
+      "*": "ask"
+    }
+  },
+  "mcp": {
+    "gemini-notebook-mcp": {
+      "type": "local",
+      "command": [
+        "notebooklm-mcp"
+      ],
+      "enabled": true,
+      "timeout": 300000
+    },
+    "obsidian": {
+      "type": "local",
+      "command": [
+        "npx.cmd",
+        "@bitbonsai/mcpvault",
+        "D:\\opencode\\我的筆記"
+      ],
+      "enabled": true
+    },
+    "canva": {
+      "type": "remote",
+      "url": "https://mcp.canva.com/mcp",
+      "enabled": true,
+      "timeout": 300000
+    },
+    "playwright": {
+      "type": "local",
+      "command": [
+        "npx.cmd",
+        "-y",
+        "@playwright/mcp"
+      ],
+      "enabled": true
+    },
+    "open-computer-use": {
+      "type": "local",
+      "command": [
+        "open-computer-use",
+        "mcp"
+      ],
+      "enabled": true
+    }
+  },
+  "references": {
+    "gdrive": {
+      "path": "G:\\我的雲端硬碟",
+      "description": "Google Drive 個人雲端硬碟，含班級與教學資料"
+    },
+    "gdrive-shared": {
+      "path": "G:\\共用雲端硬碟",
+      "description": "Google Drive 共用雲端硬碟"
+    }
+  },
+  "experimental": {
+    "mcp_timeout": 300000
+  }
+}

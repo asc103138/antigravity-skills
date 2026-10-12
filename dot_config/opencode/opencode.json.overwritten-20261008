@@ -1,0 +1,40 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "gemini-notebook-mcp": {
+      "type": "local",
+      "command": [
+        "notebooklm-mcp"
+      ],
+      "enabled": true,
+      "timeout": 300000
+    },
+    "obsidian": {
+      "type": "local",
+      "command": [
+        "npx.cmd",
+        "@bitbonsai/mcpvault",
+        "C:\\opencode\\Obsidian vault"
+      ],
+      "enabled": true,
+      "timeout": 300000
+    },
+    "canva": {
+      "type": "remote",
+      "url": "https://mcp.canva.com/mcp",
+      "enabled": true,
+      "timeout": 300000
+    }
+  },
+  "experimental": {
+    "mcp_timeout": 300000
+  },
+  "permission": {
+    "skill": {
+      "startup": "allow",
+      "shutdown": "allow",
+      "project-init": "allow",
+      "*": "ask"
+    }
+  }
+}
