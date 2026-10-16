@@ -31,9 +31,16 @@ description: Antigravity 全域技能總覽與懶人包索引。當使用者說�
 | 16 | `teacher-course-assignment-skill` | 國中小教師配課、排課、鐘點試算與雙重會計檢查 | 「配課」、「排課」、「減課」、「教師任課」 |
 | 17 | `teacher-slide-image-workshop` | 教學簡報與工作坊 16:9 逐頁 AI 圖像簡報製作 | 「教學投影片生成」、「簡報繪圖」、「逐頁簡報」 |
 | 18 | `parent-meeting-studio` | 班親會、家長日企劃、簡報、講者備註與響應式網站設計 | 「班親會」、「家長日」、「親師座談會」 |
-| 19 | `antigravity-advanced-doc-toolkit` | 教學行政進階文件與資料處理（整合 PdfCraft 原生 PDF 引擎、macOS適性、PDF表格抽取、合併分割、Pandas大表統計、圖片批次浮水印） | 「進階文件處理」、「PDF表格擷取」、「段考成績分析」、「圖片批次浮水印」、「PDF轉圖」、「PDF壓縮最佳化」 |
+| 19 | `antigravity-advanced-doc-toolkit` | 教學行政進階文件與資料處理（macOS適性、PDF表格抽取、合併分割、Pandas大表統計、圖片批次浮水印） | 「進階文件處理」、「PDF表格擷取」、「段考成績分析」、「圖片批次浮水印」 |
 | 20 | `g4-curriculum-review` | 全域教材與試題三階審查中樞（強制約束：所有考卷、學習單、教學簡報、各類教材生成前必審，南一數/翰林國/康軒社/海線情境） | 「生成教材」、「出考卷」、「做學習單」、「教學簡報」、「審教材」、「四年級審查」、「三階漏斗審查」 |
-| 21 | `antigravity-pdfcraft` | 純 Rust 高效能 PDF 工作台（Acrobat Pro 等級）：檢視、合併、分割、頁面重排、文字抽取、渲染轉圖、表單、註解、浮水印與最佳化 | 「PdfCraft」、「PDF處理」、「PDF合併」、「PDF分割」、「PDF轉圖片」、「PDF旋轉」、「PDF表單」、「PDF浮水印」 |
+| 21 | `soil-image-deck` | SOIL 純圖片教學簡報（每頁一張全版 16:9 AI 圖片，打包成 .pptx，支援 baked 與 plate 模式） | 「做純圖片簡報」、「全圖簡報」、「每頁都是AI生的圖」 |
+| 22 | `soil-teaching-deck` | SOIL 教學簡報工作流（六顆引擎、三段式脈絡、可編輯文字與 AI 插畫/底圖） | 「幫我做教學簡報」、「上課用的投影片」、「用 SOIL 做簡報」 |
+| 23 | `soil-html-deck` | SOIL HTML 互動簡報（單一可攜 HTML、Chart.js 圖表、可排序表格、滿版自適應與 Emil Kowalski 動效工藝） | 「做 HTML 簡報」、「網頁版簡報」、「互動式簡報」 |
+| 24 | `antigravity-mineru` | MinerU (v4.0+) 高精準度多模態 PDF 與文件結構化解析（圖文原位對齊、跨頁表格、LaTeX 公式、OCR） | 「MinerU」、「解析含圖PDF」、「考卷PDF轉檔」 |
+| 25 | `shanshiba-workflow-colab` | 山獅霸的多重宇宙 AI 短片與搞笑教學影片全套工作流（本機 + Google Colab G4 雲端雙軌、金色法陣片尾、五遍自審） | 「山獅霸工作流」、「做 AI 短片」、「教學影片製作」、「Colab 跑 H3」 |
+| 26 | `shanshiba-drama` | 山獅霸 AI 短劇九階段編劇（16:9 橫式劇本格式、神話層×真相層反差喜劇、單鏡 ≤12 秒鏡表切分） | 「寫短劇劇本」、「寫一支短片」、「想個劇情」、「把劇本切成鏡頭」 |
+| 27 | `blender-previs` | 山獅霸 AI 短劇 Blender 3D 預演與交付包（鎖空間機位、布置圖檢查、H3 提示詞素材打包） | 「做預演」、「白模」、「排鏡位」、「輸出提示詞包」 |
+
 
 ---
 
