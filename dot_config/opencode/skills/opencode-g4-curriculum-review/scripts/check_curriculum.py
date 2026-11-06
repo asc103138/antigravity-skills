@@ -109,6 +109,11 @@ def load_or_build_corpus(force_rebuild: bool = False) -> dict:
         found_files = sorted(list(set(found_files)))
         for pdf_path in found_files:
             stem = Path(pdf_path).stem
+            # 嚴格排除任何非教科書、非習作的試卷/暫存檔案，防範快取反向汙染
+            if any(bad in stem.lower() for bad in ["temp", "test", "評量", "考卷", "試卷", "答案", "教師版", "審查"]):
+                continue
+            if not any(good in stem for good in ["課本", "習作", "教學指引", "備課"]):
+                continue
             raw_text = ""
             try:
                 if has_fitz:
@@ -326,13 +331,32 @@ def verify_tier1_terms(extracted: dict, subject_key: str, corpus: dict) -> dict:
         if word in combined_text:
             found_terms.add(word)
 
+    # 4. 檢測情境短文/非考點敘述中之罕用或超綱詞彙（例如「陰霾」等未學字詞）
+    rare_words_found = []
+    # 建立中年級常見基本詞白名單（避免基礎行文用詞被過度誤報）
+    common_safe_words = {
+        "微風", "溫柔", "溫暖", "操場", "陽光", "風光", "想法", "脾氣", "進步", "笑容", "自信", "幫助", "同學", "老師", "學校", "成績", "努力", "重要", "可怕", "面對", "主動", "請教", "學會", "重新", "找回", "曾經", "時間",
+        "一票", "難求", "一票難求", "承擔", "一起承擔", "討", "分享", "打氣", "技巧", "培育", "汗水", "光芒", "失誤", "默默", "肩膀", "別難過", "團體"
+    }
+    seen_rare_words = set()
+    for word in extracted["content_tokens"]:
+        if len(word) >= 2 and word not in combined_text and word not in seen_rare_words:
+            if word not in common_safe_words and not any(loc in word for loc in CONFIG["local_keywords"]):
+                # 若詞中包含完全不在課習出現過的冷僻/高難度字（如「霾」）
+                for ch in word:
+                    if ch not in combined_text:
+                        rare_words_found.append({"word": word, "rare_char": ch})
+                        seen_rare_words.add(word)
+                        break
+
     return {
         "has_corpus": True,
         "total_checked": len(found_terms) + len(missing_terms),
         "found_terms": sorted(list(found_terms)),
         "missing_terms": sorted(list(missing_terms)),
         "missing_options": missing_options,
-        "missing_bracketed": missing_bracketed
+        "missing_bracketed": missing_bracketed,
+        "rare_words_in_prose": rare_words_found
     }
 
 def verify_tier2_focus(sections: list, subject_key: str, lexicon: dict) -> list:
@@ -488,6 +512,13 @@ def analyze_content(content: str, filename: str, corpus: dict, lexicon: dict):
                 "🚨【檢驗失效】未能在文本中檢出任何符合本冊課習之核心詞彙，無法證明符合教材進度，判定打回重置！"
             )
 
+        # 檢驗情境短文背景敘述之超綱字詞（如「陰霾」）
+        if ver_res.get("rare_words_in_prose"):
+            rare_samples = [f"「{item['word']}」(含未學字『{item['rare_char']}』)" for item in ver_res["rare_words_in_prose"][:5]]
+            report["tier1_issues"].append(
+                f"🚨【致命紅線】題幹或情境短文背景敘述出現未學超綱字詞：{', '.join(rare_samples)}。"
+            )
+
     if report["tier1_issues"]:
         report["tier1_pass"] = False
 
@@ -567,6 +598,10 @@ def generate_markdown_report(analysis: dict) -> str:
                 lines.append("  - 🚫 超綱填空清單（必須更換）：")
                 for mb in ver["missing_bracketed"][:5]:
                     lines.append(f"    • 第 {mb['line']} 行填空: `{mb['word']}` (課習未查得)")
+            if ver.get("rare_words_in_prose"):
+                lines.append("  - 🚫 題幹/短文背景敘述超綱字詞清單：")
+                for rw in ver["rare_words_in_prose"][:10]:
+                    lines.append(f"    • 詞彙 `{rw['word']}` (含未學字『{rw['rare_char']}』)")
 
     # 階段二
     if analysis["tier2_pass"]:
@@ -615,8 +650,25 @@ def process_file(file_path: Path, output_dir: Path, corpus: dict, lexicon: dict)
 
     print(f"🔍 正在審查檔案: {file_path.name} (類型: {ext})")
 
-    with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
-        content = f.read()
+    if ext == ".docx":
+        try:
+            import docx
+            doc = docx.Document(file_path)
+            content_list = []
+            for p in doc.paragraphs:
+                content_list.append(p.text)
+            for t in doc.tables:
+                for row in t.rows:
+                    for cell in row.cells:
+                        content_list.append(cell.text)
+            content = "\n".join(content_list)
+        except Exception as e:
+            print(f"⚠️ 讀取 .docx 失敗，退回純文字讀取: {e}")
+            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                content = f.read()
+    else:
+        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+            content = f.read()
 
     analysis = analyze_content(content, file_path.name, corpus, lexicon)
     md_report = generate_markdown_report(analysis)
